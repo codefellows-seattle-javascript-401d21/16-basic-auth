@@ -8,7 +8,7 @@ const debug = require('debug')('http:route-auth');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
-    debug(`router.post`);
+    debug(`router.post, calling user.generatePasswordHash`);
     //1st cache password sent with request body, remove it from request, so when boomerang goes full circle not still sitting in that piece of data
     let password = req.body.password;
     delete req.body.password; //should remove altogether form the body
@@ -25,6 +25,7 @@ module.exports = function(router) {
   });
 
   router.get('/signin', basicAuth, (req, res) => {
+    debug('router.get, calling Auth.findOne');
     //find the user!! returns nothing if you pass it something && doesn't find matching thing
     Auth.findOne({username: req.auth.username})
       .then(user => {

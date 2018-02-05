@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken'); //auth token sent back to user when signup/
 const bcrypt = require('bcrypt'); //used to HASH & compare passwords in our database
 const crypto = require('crypto'); //built into node, just like fs module, generates the compare hash for us
 const mongoose = require('mongoose');
+const debug = require('debug')('http:auth');
 
 //hardcoded requirement for the model, anything in browser is client-side validation
 const Auth = mongoose.Schema({
@@ -18,6 +19,7 @@ const Auth = mongoose.Schema({
 
 Auth.methods.generatePasswordHash = function(password) { //sets up method for each Auth schema so its available as needed
   //can validate here because it doesn't check if there's a password until the .save() is called on the schema
+  debug('calling generatePasswordHash');
   if(!password) return Promise.reject(new Error('Authorization failed. Password required.')); //explicitly reject with new error
 
   return bcrypt.hash(password, 10) //10 is the saltrounds, i.e. # of rounds/steps of encryption
@@ -27,6 +29,7 @@ Auth.methods.generatePasswordHash = function(password) { //sets up method for ea
 };
 
 Auth.methods.comparePasswordHash = function(password) {
+  debug('calling comparePasswordHash');
   //don't worry about validation b/c pass nothing in will not confirm as valid, pass to error-handler
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (err, valid) => { //plain text password, hashed password, callback with err/valid as arguments
@@ -40,7 +43,8 @@ Auth.methods.comparePasswordHash = function(password) {
 };
 
 //use crypto nodeJS module, looking for random 32-byte string/value, then stringifiy into hexidecimal encoding
-Auth.methods.generateCompareHash = function() { 
+Auth.methods.generateCompareHash = function() {
+  debug('calling generateCompareHash');
   this.compareHash = crypto.randomBytes(32).toString('hex');
   return this.save()
   //if protecting against brute force, have helper function that would use a counter to stop further attempts
@@ -49,6 +53,7 @@ Auth.methods.generateCompareHash = function() {
 };
 
 Auth.methods.generateToken = function() {
+  debug('calling generateToken');
   //if not this.generateCompareHash, would scope to MODULE not the SCHEMA
   return this.generateCompareHash() //on success, sends up A PROMISE
     .then(compareHash => jwt.sign(compareHash, process.env.APP_SECRET))
