@@ -17,11 +17,12 @@ const MONGODB_URI = process.env.MONGODB_URI;
 app.use(cors());
 app.use('/api/v1', router);
 require('../route/route-auth')(router);
-app.all('/{0,}', (req, res) => errorHandler(new Error('Path Error. Route not found.'))); //actually valid, '/*' can break things
+app.all('/{0,}', (req, res) => errorHandler(new Error('Path Error. Route not found.'), res)); //actually valid, '/*' can break things
 
 
 //server controls
-const server = module.explorts = {};
+const server = module.exports = {};
+
 server.start = () => {
   return new Promise((resolve, reject) => {
     if(server.isOn) return reject(new Error('Server Error. Cannot start server on the same port when already running.'));
