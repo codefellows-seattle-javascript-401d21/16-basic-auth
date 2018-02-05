@@ -16,7 +16,7 @@ const Auth = mongoose.Schema({
   compareHash: {type: String, unique: true},
 }, {timestamps: true});
 
-Auth.methods.generatePasswordsHash = function(password) { //sets up method for each Auth schema so its available as needed
+Auth.methods.generatePasswordHash = function(password) { //sets up method for each Auth schema so its available as needed
   //can validate here because it doesn't check if there's a password until the .save() is called on the schema
   if(!password) return Promise.reject(new Error('Authorization failed. Password required.')); //explicitly reject with new error
 

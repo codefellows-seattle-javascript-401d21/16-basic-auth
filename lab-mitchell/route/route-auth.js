@@ -4,10 +4,11 @@ const Auth = require('../model/auth');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
-const debug = require('debug');
+const debug = require('debug')('http:route-auth');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
+    debug(`router.post`);
     //1st cache password sent with request body, remove it from request, so when boomerang goes full circle not still sitting in that piece of data
     let password = req.body.password;
     delete req.body.password; //should remove altogether form the body
