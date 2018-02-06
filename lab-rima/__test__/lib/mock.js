@@ -11,10 +11,9 @@ const mock = module.exports = {};
 mock.auth = {};
 
 mock.auth.createOne = () => {
- return new Auth({username: `${faker.internet.userName()}`,
-                  password: `${faker.internet.password()}`,
-                  email: `${faker.internet.email()}`})
-  .save();
+  return {username: faker.internet.userName(),
+          password: faker.internet.password(),
+          email: faker.internet.email()};
 };
 
 mock.auth.removeAll = () => Promise.all([Auth.remove()]);

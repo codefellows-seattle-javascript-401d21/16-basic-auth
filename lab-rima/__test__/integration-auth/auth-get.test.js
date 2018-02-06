@@ -14,25 +14,18 @@ describe('GET /api/v1/signin', () => {
   afterAll(() => server.stop());
   afterAll(() => Auth.remove());
   
-  let resOne;
+  
+  let authOne, authOnePw, resOne;
   describe('Valid req/res', () => {
-/*    beforeAll(() => {
-      return mock.auth.createOne()
-        .then(auth => this.mockAuth = auth);
-    });
-    beforeAll(() => {
-      return superagent.get(`:${PORT}/api/v1/signin`)
-        .auth(this.mockAuth)
-        .then(res => resOne = res);
-    });
-*/      
+
+    let mockAuth = mock.auth.createOne();
     beforeAll(() => {
       return superagent.post(`:${PORT}/api/v1/signup`)
-        .send({'username': 'Test Signin', 'password': 'pw', 'email': 'test@test.com'});
+        .send({'username': mockAuth.username, 'password': mockAuth.password, 'email': mockAuth.email});
     });
     beforeAll(() => {
       return superagent.get(`:${PORT}/api/v1/signin`)
-        .auth('Test Signin', 'pw')
+        .auth(mockAuth.username, mockAuth.password)
         .then(res => resOne = res);
     });
       
