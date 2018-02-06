@@ -2,8 +2,8 @@
 
 const server = require('../../lib/server');
 const superagent = require('superagent');
-// const mock = require('../lib/mocks');
-// const faker = require('faker');
+const mock = require('../lib/mocks');
+const faker = require('faker');
 const errorHandler = require('../../lib/error-handler');
 require('jest');
 
@@ -15,16 +15,28 @@ describe('#auth-get /api/v1/signin', function () {
 
   describe('valid input/output', () => {
     beforeAll(() => {
-      return superagent.post(`${this.base}`)
-        .send({username: 'lolita', password: 'jones', email: 'email@yahoo.com'})
-        .then(console.log)
-        .catch(err => errorHandler(err));
+      return mock.auth.createOne()
+        .then(auth => this.mockAuth = auth)
+        .then(() => {
+          console.log(this.mockAuth);
+        });
+          // this.mockAuth = {
+          //   username: faker.name.firstName(),
+          //   password: faker.name.lastName(),
+          //   email: faker.internet.email(),
+          // };
+
+        //   return superagent.post(`${this.base}`)
+        //     .send(this.mock)
+        //     .then(res => this.response = res)
+        //     .catch(err => errorHandler(err));
+        // });
     });
+
 
     it('should return a response status of 201', () => {
       return superagent.get(`${this.base}`)
-        .set({username: 'lolita', password: 'jones'})
-        .auth('lolita', 'jones')
+
         .then(res => {
           expect(res.status).toBe(200);
         });
