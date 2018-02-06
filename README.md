@@ -1,63 +1,87 @@
-![CF](https://camo.githubusercontent.com/70edab54bba80edb7493cad3135e9606781cbb6b/687474703a2f2f692e696d6775722e636f6d2f377635415363382e706e67) 16: Basic Auth
-===
+# Project Title
 
-## Submission Instructions
-  * fork this repository & create a new branch for your work
-  * write all of your code in a directory named `lab-` + `<your name>` **e.g.** `lab-susan`
-  * push to your repository
-  * submit a pull request to this repository
-  * submit a link to your PR in canvas
-  * write a question and observation on canvas
+One Paragraph of project description goes here
 
-## Learning Objectives
-* students will be able to create basic authorization middleware
-* students will be able to test basic authorization for signup/signin routes
+## Getting Started
 
-## Requirements
-#### Configuration
-* `package.json`
-* `.eslintrc`
-* `.gitignore`
-* `.env`
-* `README.md`
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-## Feature Tasks
-* create the following directories to organize your code:
-  * **lib**
-  * **model**
-  * **route**
-  * **test**
-* create an HTTP server using `express`
-* using `mongoose`, create a **User** model with the following properties and options:
-  * `username` - *required and unique*
-  * `email` - *required and unique*
-  * `password` - *required - this must be hashed and can not stored as plain text*
-  * `compareHash` - *unique*
-* use the **npm** `debug` module to log function calls that are used within your application
-* use the **express** `Router` to create a custom router for allowing users to **sign up** and **sign in**
-* use the **npm** `dotenv` module to house the following environment variables:
-  * `PORT`
-  * `MONGODB_URI`
-  * `APP_SECRET` *(used for signing and verify tokens)*
+### Prerequisites
 
-## Server Endpoints
-### `/api/signup`
-* `POST` request
-* the client should pass the username and password in the body of the request
-* the server should respond with a token (generated using `jwt`)
-* the server should respond with **400 Bad Request** to a failed request
+What things you need to install the software and how to install them
 
-### `/api/signin`
-* `GET` request
-* the client should pass the username and password to the server using a `Basic:` authorization header
-* the server should respond with a token for authenticated users
-* the server should respond with **401 Unauthorized** for non-authenticated users
+```
+Give examples
+```
 
-## Tests
-* create a test that will ensure that your API returns a status code of **404** for any routes that have not been registered
-* `/api/signup`
-* `POST` - test **400**, if no request body has been provided or the body is invalid
-* `POST` - test **200**, if the request body has been provided and is valid
-* `/api/signin`
-* `GET` - test **401**, if the user could not be authenticated
-* `GET` - test **200**, responds with token for a request with a valid basic authorization header
+### Installing
+
+A step by step series of examples that tell you have to get a development env running
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+
+## Authors
+
+* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+
+See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## Acknowledgments
+
+* Hat tip to anyone who's code was used
+* Inspiration
+* etc
