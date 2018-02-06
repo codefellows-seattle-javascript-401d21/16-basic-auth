@@ -2,12 +2,11 @@
 
 //app dependencies
 const express = require('express');
-const debug = require('debug');
+const debug = require('debug')('http:server');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-const errorHandler = require('errorHandler');
-
+const errorHandler = require('./error-handler');
 
 //App setup
 const app = express();
@@ -15,15 +14,15 @@ const router = express.Router() ;
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
+debug('PORT', PORT, 'MONGODB_URI', MONGODB_URI);
 
 app.use(cors());
 app.use('./api/v1', router);
-require('./route/route_auth')(router);
+require('../route/route-auth')(router);
 app.use('/*', (req, res) => errorHandler(new Error('Path Error: Requested path not found'), res));
 
 
 const server = module.exports = {};
-
 
 server.start = () => {
   return new Promise((resolve, reject) => {
