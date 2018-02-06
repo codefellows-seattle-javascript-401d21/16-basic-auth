@@ -12,11 +12,13 @@ module.exports = function(router) {
     debug('req.auth', req.auth);
     Auth.findOne({username: req.auth.username})
       .then(user => {
+        debug('user', user);
         if(!user) return new Error('Invalid user:  User not found');
         return user ? user.comparePasswords(req.auth.username) : new Error('Invalid user:  User not found');
       }).then(user => {
         delete req.headers.authorization;
         delete req.auth.password;
+        debug('user after', user)
         return user;
       })
       .then(user => user.createToken())

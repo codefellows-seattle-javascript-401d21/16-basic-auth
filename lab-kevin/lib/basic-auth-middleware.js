@@ -1,6 +1,6 @@
 'use strict';
 
-const errorHandler = require('errorHandler');
+const errorHandler = require('./error-handler');
 const debug = require('debug')('http:basic-auth-middleware');
 
 module.exports = function(req, res, next) {

@@ -1,61 +1,61 @@
 'use strict';
 
-const debug = require('debug')('http:server-test');
+const debug = require('debug')('http:auth-get-test');
 const server = require('../../lib/server');
 const superagent = require('superagent');
+const Auth = require('../../model/auth');
+const mock = require('../lib/mock');
 require('jest');
 
 describe('GET Integration', function() {
-  beforeAll(() => server.start(process.env.PORT), () => console.log(process.env.PORT));
+  beforeAll(() => server.start());
   afterAll(() => server.stop());
+  //afterAll(mock.removeUsers);
+
+
+  this.url = ':4000/api/v1';
   
   describe('Valid requests', () => {
-
+   
+    beforeAll(() => {
+      this.user = mock.user;
+      return mock.createUser();
+    });
+  
     beforeAll(()=> {
-      return  superagent.post(':4000/api/v1/note')
-        .send({subject: 'hello', comment: 'Funkn-A'})
+      debug('userinfo', `${this.user.username}:${this.user.password}`);
+      return  superagent.get(`${this.url}/signin`)
+        .auth(`${this.user.username}:${this.user.password}`)
         .then( res => {
-          this.resPost = res;
+          this.resGet = res;
         })
         .catch(err => {
           debug('superagent error ', err);
         });
     });
 
-    describe('GET /api/v1/note/someid => fetchOne', () => {
+    it('should return status code 200', () => {
+      expect(this.resGet.status).toEqual(200);
+    });
     
-      beforeAll(() => {
-        debug('this.resPost.body.id', this.resPost.body.id);
-        return superagent.get(`:4000/api/v1/note/${this.resPost.body.id}`)
-          .then(res => this.getOne = res);       
-      });
-  
-      it('should return json data', () => {
-        debug('this.getOne.body', this.getOne.body);
-        expect(this.getOne.body.id).toEqual(this.resPost.body.id);
-      });
-      it('should return status code 200', () => {
-        expect(this.getOne.status).toEqual(200);
-      });
-    });
 
-    describe('GET /api/v1/note => fetchAll', () => {
+    // describe('GET /api/v1/note => fetchAll', () => {
       
-      beforeAll(() => {
-        return superagent.get(':4000/api/v1/note')
-          .then(res => this.getAll = res);       
-      });
+    //   beforeAll(() => {
+    //     return superagent.get(':4000/api/v1/note')
+    //       .then(res => this.getAll = res);       
+    //   });
 
-      it('should contain id of post in array', () => {
-        debug('this.getAll.body', Array.isArray(this.getAll.body));
-        debug('this.getAll.text', this.getAll.text);
-        expect(this.getAll.body).toEqual(expect.arrayContaining([this.resPost.body.id]));
+    //   it('should contain id of post in array', () => {
+    //     debug('this.getAll.body', Array.isArray(this.getAll.body));
+    //     debug('this.getAll.text', this.getAll.text);
+    //     expect(this.getAll.body).toEqual(expect.arrayContaining([this.resPost.body.id]));
         
-      });
-      it('should return status code 200', () => {
-        expect(this.getAll.status).toEqual(200);
-      });
-    });
+    //   });
+    //   it('should return status code 200', () => {
+    //     expect(this.getAll.status).toEqual(200);
+    //   });
+    // });
   
   });
 
