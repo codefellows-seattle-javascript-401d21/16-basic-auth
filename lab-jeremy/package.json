@@ -1,5 +1,5 @@
 {
-  "name": "01-basic-auth",
+  "name": "16-basic-auth",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -38,15 +38,19 @@
       }
     }
   },
-  "author": "melanie",
+  "author": "Jeremy Pearson",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "dotenv": "^5.0.0",
+    "eslint": "^4.17.0",
     "express": "^4.16.2",
+    "faker": "^4.1.0",
+    "jest": "^22.1.4",
     "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.3"
+    "mongoose": "^5.0.3",
+    "superagent": "^3.8.2"
   }
 }
