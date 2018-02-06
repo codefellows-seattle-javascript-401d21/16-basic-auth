@@ -1,4 +1,4 @@
-# Lab 13 - Mongo
+# Lab 16 - Basic Auth
 
 **Author**: Liza Oh
 
