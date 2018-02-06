@@ -2,8 +2,8 @@
 
 const server = require('../../lib/server');
 const superagent = require('superagent');
-const mock = require('../lib/mocks');
-const faker = require('faker');
+// const mock = require('../lib/mocks');
+// const faker = require('faker');
 const errorHandler = require('../../lib/error-handler');
 require('jest');
 
@@ -11,7 +11,7 @@ describe('#auth-post /api/v1/signup', function () {
   beforeAll(() => this.base = `:${process.env.PORT}/api/v1/signup`);
   beforeAll(server.start);
   afterAll(server.stop);
-  afterEach(mock.auth.removeAll);
+  // afterEach(mock.auth.removeAll);
 
   describe('valid input/output', () => {
     // beforeAll(() => {
