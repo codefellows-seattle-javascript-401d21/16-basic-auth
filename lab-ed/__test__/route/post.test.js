@@ -13,7 +13,7 @@ describe('POST /api/v1/signup', function() {
   describe('Valid Request to the POST API, ', () => {
     describe('POST /ba/', () => {
       it('should respond with a status 201', () => {
-        return superagent.post(':4000/api/v1/signup/')
+        return superagent.post(`${this.base}`)
           .send({username: faker.internet.userName(), email: faker.internet.email(), password: faker.random.uuid()})
           .then(res => {
             expect(res.status).toBe(201)
@@ -33,11 +33,19 @@ describe('POST /api/v1/signup', function() {
   describe('Invalid Request to the POST API, ', () => {
     describe('POST /ba/', () => {
       it('should respond with a status 409 and BulkWriteError', () => {
-        return superagent.post(':4000/api/v1/signup/')
+        return superagent.post(`${this.base}`)
           .send({username: 'ed', email: faker.internet.email(), password: 'hello'})
           .catch(err => {
             expect(err.status).toBe(409)
             expect(err.response.text).toMatch(/BulkWriteError/i)
+          })
+      })
+      it('should respond with a status 400 and auth validation failed', () => {
+        return superagent.post(`${this.base}`)
+          .send({username: '', email: faker.internet.email(), password: 'hello'})
+          .catch(err => {
+            expect(err.status).toBe(400)
+            expect(err.response.text).toMatch(/auth validation failed/i)
           })
       })
     })

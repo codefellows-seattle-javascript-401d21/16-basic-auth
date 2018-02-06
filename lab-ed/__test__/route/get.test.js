@@ -12,7 +12,7 @@ describe('GET /api/v1/signin', function() {
   describe('Valid Request to the GET API, ', () => {
     describe('GET /ba/', () => {
       it('should respond with a status 200', () => {
-        return superagent.get(':4000/api/v1/signin/')
+        return superagent.get(`${this.base}`)
           .auth('ed', 'hello')
           .then(res => {
             expect(res.status).toBe(200)
@@ -24,7 +24,7 @@ describe('GET /api/v1/signin', function() {
   describe('Invalid Request to the GET API, ', () => {
     describe('GET /ba/', () => {
       it('should respond with a status 401', () => {
-        return superagent.get(':4000/api/v1/signin/')
+        return superagent.get(`${this.base}`)
           .auth('jimbo', 'hello')
           .catch(err => {
             expect(err.status).toBe(401)
