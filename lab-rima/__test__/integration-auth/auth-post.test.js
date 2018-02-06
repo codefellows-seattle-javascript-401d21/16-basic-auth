@@ -21,8 +21,8 @@ describe('POST /api/v1/signup', () => {
     beforeAll(() => {
       return superagent.post(`:${PORT}/api/v1/signup`)
         .send({username: `${faker.internet.userName}`,
-              password: `${faker.internet.password}`,
-              email: `${faker.internet.email}`})
+          password: `${faker.internet.password}`,
+          email: `${faker.internet.email}`})
         .then(res => resOne = res);
     });
       

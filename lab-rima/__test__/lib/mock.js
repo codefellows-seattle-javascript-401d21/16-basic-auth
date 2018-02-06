@@ -12,8 +12,8 @@ mock.auth = {};
 
 mock.auth.createOne = () => {
   return {username: faker.internet.userName(),
-          password: faker.internet.password(),
-          email: faker.internet.email()};
+    password: faker.internet.password(),
+    email: faker.internet.email()};
 };
 
 mock.auth.removeAll = () => Promise.all([Auth.remove()]);
