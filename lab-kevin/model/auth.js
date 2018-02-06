@@ -26,11 +26,13 @@ Auth.methods.createHashedpassword = function(password){
 };
 
 Auth.methods.comparePasswords = function(password) {
+  debug('password', password);
   return bcrypt.compare(password, this.password)
     .then(valid => {
+      debug('valid before:', valid);
       if(!valid) return new Error('Authorization Error: invalid password');
-      debug('valid:', valid);
-      return valid;
+      debug('valid after:', valid);
+      return this;
     })
     .catch(err => err);
 };

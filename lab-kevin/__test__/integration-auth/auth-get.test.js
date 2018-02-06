@@ -10,8 +10,7 @@ require('jest');
 describe('GET Integration', function() {
   beforeAll(() => server.start());
   afterAll(() => server.stop());
-  //afterAll(mock.removeUsers);
-
+  afterAll(mock.removeUsers);
 
   this.url = ':4000/api/v1';
   
@@ -37,26 +36,17 @@ describe('GET Integration', function() {
     it('should return status code 200', () => {
       expect(this.resGet.status).toEqual(200);
     });
+
+    it('should not contain a password in the req.auth', () => {
+      expect(this.resGet.res.req.auth).toBeUndefined();
+    });
     
-
-    // describe('GET /api/v1/note => fetchAll', () => {
-      
-    //   beforeAll(() => {
-    //     return superagent.get(':4000/api/v1/note')
-    //       .then(res => this.getAll = res);       
-    //   });
-
-    //   it('should contain id of post in array', () => {
-    //     debug('this.getAll.body', Array.isArray(this.getAll.body));
-    //     debug('this.getAll.text', this.getAll.text);
-    //     expect(this.getAll.body).toEqual(expect.arrayContaining([this.resPost.body.id]));
-        
-    //   });
-    //   it('should return status code 200', () => {
-    //     expect(this.getAll.status).toEqual(200);
-    //   });
-    // });
-  
+    it('should should have a token in the response body that can be parsed and decoded', () => {
+      let tokenObj = Buffer.from(this.resGet.body.split('.')[1], 'base64').toString();
+      debug('tokenObj', tokenObj);
+      expect(JSON.parse(tokenObj).hasOwnProperty('jwt')).toBe(true);
+    });
+    
   });
 
 });

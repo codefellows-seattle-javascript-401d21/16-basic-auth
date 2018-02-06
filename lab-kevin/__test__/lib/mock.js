@@ -8,19 +8,20 @@ const mock = module.exports = {};
 
 
 mock.user = {
-  username: `${faker.name.prefix()}${faker.hacker.adjective()}`.replace('.', ''),
+  username: `${faker.name.prefix()}${faker.hacker.adjective()}`.replace(/[.\s]/, ''),
   email: `${faker.internet.email()}`,
-  password:`${faker.hacker.adjective()}${faker.hacker.noun()}${faker.hacker.verb()}`,
+  password:`${faker.hacker.adjective()}${faker.hacker.noun()}`.replace(/[.\s]/, ''),
+
 };
 
 mock.createUser = () => {
   let userCreds = mock.user;
+  debug('mockuseer', mock.user);
   let pswd = userCreds.password;
   let newUser = new Auth({username:userCreds.username, email:userCreds.email});
   return newUser.createHashedpassword(pswd)
     .then(() => newUser.save())
     .then(() => newUser.createToken())
-    .then(jwt => res.status(201).json(jwt))
     .catch(console.err);
 };
 
