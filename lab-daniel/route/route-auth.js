@@ -26,7 +26,7 @@ module.exports = function(router) {
       .then(user => 
         user
           ? user.comparePasswordHash(req.auth.password)
-          : Promise.reject(new Error('Authorization Error: User Does Not Exist'))
+          : Promise.reject(new Error('Authorization Failed: User Does Not Exist'))
       )
       .then(user => {
         delete req.auth.password;

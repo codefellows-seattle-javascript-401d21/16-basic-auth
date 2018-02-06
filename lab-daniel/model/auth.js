@@ -15,7 +15,7 @@ const Auth = mongoose.Schema({
 
 
 Auth.methods.generatePasswordHash = function (password) {
-  if(!password) return Promise.reject(new Error('Authorization Failure: Password Required'));
+  if(!password) return Promise.reject(new Error('Authorization Failed: Password Required'));
   debug('>>>>GPH Start<<<<');
   return bcrypt.hash(password, 10)
     .then(hash => this.password = hash)
@@ -27,7 +27,7 @@ Auth.methods.comparePasswordHash = function (password) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (err, valid) => {
       if(err) return reject(err);
-      if(!valid) return reject(new Error('Authorization Failure: Incorrect Password Or Username.'));
+      if(!valid) return reject(new Error('Authorization Failed: Incorrect Password Or Username.'));
       resolve(this);
     });
   });
