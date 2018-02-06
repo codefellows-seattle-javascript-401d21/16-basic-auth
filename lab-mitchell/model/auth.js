@@ -24,7 +24,10 @@ Auth.methods.generatePasswordHash = function(password) { //sets up method for ea
 
   return bcrypt.hash(password, 10) //10 is the saltrounds, i.e. # of rounds/steps of encryption
     .then(hash => this.password = hash) //hash returned, set this.password to the hashed password
-    .then(() => this) //pass it on ayyy
+    .then(() => {
+      debug('bcrypt.hash success?');
+      return this;
+    }) //pass it on ayyy
     .catch(err => err);
 };
 

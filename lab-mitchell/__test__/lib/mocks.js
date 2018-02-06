@@ -9,9 +9,9 @@ const mock = module.exports = {};
 mock.auth = {};
 
 mock.auth.createOne = () => new Auth({
-  username: faker.name.firstName,
-  password: faker.name.lastName,
-  email: faker.internet.email,
+  username: faker.name.firstName(),
+  password: faker.name.lastName(),
+  email: faker.internet.email(),
 }).save();
 
 mock.auth.createMany = n =>

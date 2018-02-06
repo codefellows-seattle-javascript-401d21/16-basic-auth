@@ -18,8 +18,14 @@ module.exports = function(router) {
 
     //generate/hash password, return as user so we can save user
     user.generatePasswordHash(password)
-      .then(newUser => newUser.save()) //saved user with hashed password to DB
-      .then(userRes => userRes.generateToken())
+      .then(newUser => {
+        debug('generatePassHash returned value, about to save');
+        return newUser.save();
+      }) //saved user with hashed password to DB
+      .then(userRes => {
+        debug('user saved, calling generateToken');
+        return userRes.generateToken();
+      })
       .then(token => res.status(201).json(token)) //sends success response 201 created && JSON token of hashed password
       .catch(err => errorHandler(err, res)); //otherwise catch errors
   });
