@@ -26,7 +26,8 @@ server.start = () => {
   return new Promise((resolve, reject) => {
     if(server.isOn) return reject(new Error('Server error.  Cannot start server, already running.'));
     server.http = app.listen(PORT, () => {
-      console.log(`Listening on ${PORT}`);
+      debug(`Listening on ${PORT}`);
+      // console.log(`Listening on ${PORT}`);
       server.isOn = true;
       mongoose.connect(MONGODB_URI);
       return resolve(server);
