@@ -41,5 +41,4 @@ server.stop = () => {
       return resolve()
     })
   })
-
 }
