@@ -47,7 +47,7 @@ Auth.methods.createCompHash = function() {
 Auth.methods.createToken = function() {
   debug('SECRET:', process.env.APP_SECRET);
   return this.createCompHash()
-    .then(cmpHsh => jwt.sign({jwr: cmpHsh}, process.env.APP_SECRET))
+    .then(cmpHsh => jwt.sign({jwt: cmpHsh}, process.env.APP_SECRET))
     .catch(err => err);
 };
 
