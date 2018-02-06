@@ -27,7 +27,7 @@
     "collectCoverage": true,
     "coverageDirectory": "./coverage",
     "coveragePathIgnorePatterns": [
-      "/__test__/"
+      "/__test__/", "<rootDir>/lib/errors/"
     ],
     "coverageThreshold": {
       "global": {
@@ -44,9 +44,15 @@
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
+    "crypto": "^1.0.1",
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.0.3"
+  },
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "jest": "^22.1.4",
+    "superagent": "^3.8.2"
   }
 }
