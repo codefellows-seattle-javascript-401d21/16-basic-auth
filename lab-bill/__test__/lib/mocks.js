@@ -2,7 +2,7 @@
 
 const faker = require('faker');
 const Auth = require('../../model/auth');
-const errorHandler = require('../../lib/error-handler');
+// const errorHandler = require('../../lib/error-handler');
 const mock = module.exports = {};
 
 

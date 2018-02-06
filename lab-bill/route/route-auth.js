@@ -4,7 +4,7 @@ const Auth = require('../model/auth');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
@@ -12,14 +12,9 @@ module.exports = function(router) {
     delete req.body.password;
 
     let user = new Auth(req.body);
-    console.log(user);
     user.generatePasswordHash(pw)
       .then(newUser => newUser.save())
       .then(userRes => userRes.generateToken())
-    // .then(token => {
-    //   res.cookie(`X-CFGRAM-TOKEN`, token)
-    //   res.status(201).json(token)
-    // })
       .then(token => res.status(201).json(token))
       .catch(err => errorHandler(err, res));
   });
