@@ -16,7 +16,7 @@ module.exports = function(router) {
         if(!user) return new Error('Invalid user:  User not found');
         return user ? user.comparePasswords(req.auth.password) : new Error('Invalid user:  User not found');
       }).then(user => {
-        //delete req.headers.authorization;
+        delete req.headers.authorization;
         delete req.auth.password;
         return user;
       })

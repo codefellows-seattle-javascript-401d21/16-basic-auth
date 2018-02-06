@@ -3,7 +3,6 @@
 const debug = require('debug')('http:auth-get-test');
 const server = require('../../lib/server');
 const superagent = require('superagent');
-const Auth = require('../../model/auth');
 const mock = require('../lib/mock');
 require('jest');
 
