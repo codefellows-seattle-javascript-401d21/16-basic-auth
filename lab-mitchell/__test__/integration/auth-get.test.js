@@ -11,7 +11,7 @@ describe('#auth-get /api/v1/signin', function () {
   beforeAll(() => this.base = `:${process.env.PORT}/api/v1/signin`);
   beforeAll(server.start);
   afterAll(server.stop);
-  // afterEach(mock.auth.removeAll);
+  afterEach(mock.auth.removeAll);
 
   describe('valid input/output', () => {
     beforeAll(() => {
