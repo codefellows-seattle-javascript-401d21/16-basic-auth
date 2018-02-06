@@ -1,7 +1,8 @@
 # 401 JS
 
-db
-**.env
+**/db
+*.env
+.*.env
 temp
 build
 
