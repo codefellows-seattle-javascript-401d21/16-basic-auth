@@ -15,7 +15,7 @@ describe('GET /api/v1/signin', () => {
   afterAll(() => Auth.remove());
   
   
-  let authOne, authOnePw, resOne;
+  let resOne;
   describe('Valid req/res', () => {
 
     let mockAuth = mock.auth.createOne();
