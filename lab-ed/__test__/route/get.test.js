@@ -43,5 +43,10 @@ describe('GET /api/v1/signin', function() {
       .send({gnarf: 200})
       .catch(err => expect(err.status).toEqual(401))
   })
+  it('should respond with a status 404 for bad path', () => {
+    return superagent.get(':4000/api/v1/imWrong/')
+      .catch(err => {
+        expect(err.status).toBe(404)
+      })
+  })
 })
-

@@ -7,10 +7,7 @@ const mock = module.exports = {}
 
 // User Mocks - One, Many, RemoveAll
 mock.user = {}
-mock.user.createOne = () => new User({ username: faker.user.username(), email: faker.email(), password: faker.password()}).save()
-
-mock.user.createMany = n =>
-  Promise.all(new Array(n).fill(0).map(mock.user.createOne))
+mock.user.createOne = () => new User({ username: faker.internet.userName(), email: faker.internet.email(), password: faker.random.uuid()}).save()
 
 mock.user.removeAll = () => Promise.all([User.remove()])
 
