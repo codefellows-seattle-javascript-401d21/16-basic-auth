@@ -5,7 +5,7 @@ const superagent = require('superagent');
 const Auth = require('../../model/auth');
 const server = require('../../lib/server');
 // const errorHandler = require('../../lib/error-handler');
-const basePath = `:${process.env.PORT}/api/v1`;
+const basePath = `:3000/api/v1`;
 
 describe('GET api/v1/signin', () => {
     beforeAll(() => server.start(process.env.PORT, () => console.log(`Listening on ${process.env.PORT}`)));
@@ -17,8 +17,7 @@ describe('GET api/v1/signin', () => {
                 password: 'cats',
                 email: 'joy@joy.joy',
             }))
-            .then(res => console.log(res));
-        // .catch(err => errorHandler(err, res));
+            .then(res => res);
     });
     
     afterAll(() => server.stop());
