@@ -7,7 +7,6 @@ const errorHandler = require('../lib/error-handler');
 
 module.exports = function(router) {
     router.post('/signup', bodyParser, (req, res) => {
-        console.log(req.body);
         let password = req.body.password;
         delete req.body.password;
 
