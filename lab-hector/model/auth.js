@@ -1,9 +1,10 @@
 'use strict';
 
+const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const mongoose = require('mongoose');
+
 
 const Auth = mongoose.Schema({
   username: { type: String, required: true, unique: true },
@@ -14,7 +15,8 @@ const Auth = mongoose.Schema({
 
 
 Auth.methods.generatePasswordHash = function (password) {
-  if (!password) return Promise.reject(new Error('Authorization failed. Password required.'));
+  if (!password) 
+    return Promise.reject(new Error('Authorization failed. Password required.'));
 
   return bcrypt.hash(password, 10)
     .then(hash => this.password = hash)
@@ -34,7 +36,7 @@ Auth.methods.comparePasswordHash = function (password) {
 
 Auth.methods.generateCompareHash = function () {
   this.compareHash = crypto.randomBytes(32).toString('hex');
-  return this.save()
+  return this.save() //this is making sure the token seed(compare hash) is unique
     .then(() => Promise.resolve(this.compareHash))
     .catch(() => this.generateCompareHash()); // This line is not very robust... potential loop
 };
