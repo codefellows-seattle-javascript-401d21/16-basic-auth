@@ -33,7 +33,7 @@ module.exports = function(router) {
     router.put('/note/:_id?', bearerAuth, bodyParser, (req, res) => {
         Note.findById(req.params._id, req.body)
             .then(note => {
-                if (note.userId.toString() === req.user._id.toString()) {
+                if (note._id.toString() === req.params._id.toString()) {
                     note.name = req.body.name || note.name;
                     note.content = req.body.content || note.content;
                     return note.save();
@@ -48,7 +48,7 @@ module.exports = function(router) {
     router.delete('/note/:_id?', bearerAuth, (req, res) => {
         return Note.findById(req.params._id)
             .then(note => {
-                if (note.userId.toString() === req.user._id.toString()) return note.remove();
+                if (note._id.toString() === req.params._id.toString()) return note.remove();
                 return errorHandler(new Error('Validation error. Invalid ID.'), res);
             })
             .then(() => res.sendStatus(204))

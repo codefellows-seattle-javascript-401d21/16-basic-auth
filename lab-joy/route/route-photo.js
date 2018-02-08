@@ -30,13 +30,13 @@ module.exports = function (router) {
     router.get('/photo/:_id?', bearerAuth, (req, res) => {
         if (req.params._id) {
             return Photo.findById(req.params._id)
-                .then(pic = res.status(200).json(pic))
+                .then(pic => res.status(200).json(pic))
                 .catch(err => errorHandler(err, res));
         }
 
         Photo.find({ userID: req.query.userId })
             .then(photos => photos.map(photo => photo._id))
-            .then(ids = res.status(200).json(ids))
+            .then(ids => res.status(200).json(ids))
             .catch(err => errorHandler(err, res));
     });
 };
