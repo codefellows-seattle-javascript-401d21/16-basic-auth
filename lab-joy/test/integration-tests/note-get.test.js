@@ -12,9 +12,9 @@ describe('GET /api/v1/note', () => {
     beforeAll(() => mocks.auth.createOne().then(data => this.mockUser = data));
     beforeAll(() => mocks.note.createOne().then(data => this.mockNote = data));
 
+    afterAll(server.stop);
     afterAll(mocks.auth.removeAll);
     afterAll(mocks.note.removeAll);
-    afterAll(server.stop);
 
     it('should return status 200 for a request made with a valid ID', () => {
         return superagent.get(`${path}/${this.mockNote.note._id}`)
