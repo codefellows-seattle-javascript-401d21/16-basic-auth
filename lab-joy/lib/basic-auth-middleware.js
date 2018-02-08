@@ -9,7 +9,7 @@ const errorHandler = require('./error-handler');
 module.exports = function(req, res, next) {
     let authHeaders = req.headers.authorization;
     if (!authHeaders)
-        return errorHandler(new Error('Authorization failed. Headers do not match requirements'), res);
+        return errorHandler(new Error('Authorization failed. Headers do not match requirements.'), res);
 
     // looking for base64 encoded username and password just after space. Array gives you empty string and base64 encoding.
     let base64 = authHeaders.split('Basic ')[1];

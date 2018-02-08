@@ -42,6 +42,7 @@
     "eslint": "^4.17.0",
     "faker": "^4.1.0",
     "jest": "^22.1.4",
+    "jest-cli": "^22.2.1",
     "superagent": "^3.8.2"
   },
   "dependencies": {
