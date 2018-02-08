@@ -1,63 +1,50 @@
-![CF](https://camo.githubusercontent.com/70edab54bba80edb7493cad3135e9606781cbb6b/687474703a2f2f692e696d6775722e636f6d2f377635415363382e706e67) 16: Basic Auth
+![cf](http://i.imgur.com/7v5ASc8.png) 16: Basic Authentication
 ===
 
-## Submission Instructions
-  * fork this repository & create a new branch for your work
-  * write all of your code in a directory named `lab-` + `<your name>` **e.g.** `lab-susan`
-  * push to your repository
-  * submit a pull request to this repository
-  * submit a link to your PR in canvas
-  * write a question and observation on canvas
-
 ## Learning Objectives
-* students will be able to create basic authorization middleware
-* students will be able to test basic authorization for signup/signin routes
+* Students will learn about cryptographic hash and cypher algorithms
+* Students will be able to model a User and safely store their sensitive data
+* Students will be able to implement a Basic Authorization parser
 
-## Requirements
-#### Configuration
-* `package.json`
-* `.eslintrc`
-* `.gitignore`
-* `.env`
-* `README.md`
+## Resources
+* Read [basic auth](https://en.wikipedia.org/wiki/Basic_access_authentication)
 
-## Feature Tasks
-* create the following directories to organize your code:
-  * **lib**
-  * **model**
-  * **route**
-  * **test**
-* create an HTTP server using `express`
-* using `mongoose`, create a **User** model with the following properties and options:
-  * `username` - *required and unique*
-  * `email` - *required and unique*
-  * `password` - *required - this must be hashed and can not stored as plain text*
-  * `compareHash` - *unique*
-* use the **npm** `debug` module to log function calls that are used within your application
-* use the **express** `Router` to create a custom router for allowing users to **sign up** and **sign in**
-* use the **npm** `dotenv` module to house the following environment variables:
-  * `PORT`
-  * `MONGODB_URI`
-  * `APP_SECRET` *(used for signing and verify tokens)*
+## User Modeling
+Modern web applications need to model sensitive information about their users. When a users provides an applications with sensitive information, they are trusting that it will not leaked are misused. This means its a developers responsibility to store that information responsibly. Some information like emails, usernames, and addresses can be stored in plain text, as long as the database is password protected and or behind a firewall. Other information like a users password should be encrypted using a hashing algorithm before it is ever stored, preventing anyone (including developers with database permissions) from ever getting access to their password.
 
-## Server Endpoints
-### `/api/signup`
-* `POST` request
-* the client should pass the username and password in the body of the request
-* the server should respond with a token (generated using `jwt`)
-* the server should respond with **400 Bad Request** to a failed request
+User models that have sensitive data should **NEVER** be sent to client applications. If your application requires that users be able to read each others personal information, create a second Profile model to hold that data, and strictly limit access controls to the Profile model. Safely using a second model will ensure that no users will accidentally or maliciously get access to sensitive information.
 
-### `/api/signin`
-* `GET` request
-* the client should pass the username and password to the server using a `Basic:` authorization header
-* the server should respond with a token for authenticated users
-* the server should respond with **401 Unauthorized** for non-authenticated users
+## Cryptography
+> The science which studies methods for encoding messages so that they can be read only by a person who knows the secret information required for decoding, called the key; it includes cryptanalysis, the science of decoding encrypted messages without possessing the proper key, and has several other branches.
 
-## Tests
-* create a test that will ensure that your API returns a status code of **404** for any routes that have not been registered
-* `/api/signup`
-* `POST` - test **400**, if no request body has been provided or the body is invalid
-* `POST` - test **200**, if the request body has been provided and is valid
-* `/api/signin`
-* `GET` - test **401**, if the user could not be authenticated
-* `GET` - test **200**, responds with token for a request with a valid basic authorization header
+- [GNU Collaborative International Dictionary of English](http://gcide.gnu.org.ua)
+
+#### Hash Algorithms
+A Cryptographic Hash Algorithm takes a piece of data and produces a hash that is deliberately difficult to reverse. If identical data is passed into the algorithm the same hash will always be produced. Hash algorithms are often used for checking the integrity of data.
+
+In a User model a hash password can be stored when the user signs up. When the user needs to login they can resend their password and the server can hash the login password using the same hash algorithm. The server can then compare the hashed login password with previously stored hashed password to determine if the user should be authenticated.
+
+#### Cypher Algorithms
+A Cryptographic Cypher Algorithm takes a piece of data and a key and produces encrypted data. Later the encrypted data can be reversed into the original data, by decrypting it using the same key.
+
+User tokens can be created by associated a random unique string (tokenSeed) with a user account and encrypting the tokenSeed with a secret key only the server knows. We can then send the encrypted token to a client application. When the client makes a future request they can send back the token. The server can reverse the token into the tokenSeed by decrypting it with the secret key, and because the tokenSeed was unique the database can be queried to produce the user who made the request.
+
+## Basic Authorization
+Basic Authorization is a common method used to send a username and password in an HTTP request. The username and password are joined with a ':' then base64 encoded and then placed after the string 'Basic '. The resulting string is set to the value of an Authorization header.
+
+A Server can decode the Basic Authorization header to retrieve the username and password. Its important to note that base64 encoding is not a form of encryption. The client and server must use HTTPS to protect the username and password as it travels across the network.
+
+``` javascript
+let encoded = window.btoa('slugbyte:secretpassword')
+// c2x1Z2J5dGU6c2VjcmV0cGFzc3dvcmQ=
+
+request({
+  method: 'GET',
+  url: 'https://api.example.com/login',
+  headers: {
+    Authorization: `Basic ${encoded}`,
+  },
+})
+.then(handleLogin)
+.catch(handleLoginError)
+```
