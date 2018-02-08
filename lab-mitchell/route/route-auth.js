@@ -39,13 +39,13 @@ module.exports = function(router) {
           ? user.comparePasswordHash(req.auth.password) //we generating the .auth. data through our own middleware
           : Promise.reject(new Error('Authorization Failed. User not found.')); //or username required, etc.
       })
-    //got user, compared password hash, which on success should return entire user instance when resolved
-    //then generate new token, format response, generat/catch errors
+      //got user, compared password hash, which on success should return entire user instance when resolved
+      //then generate new token, format response, generat/catch errors
       .then(user => { //we've made it this far, so delete the password
         delete req.headers.authorization;
         delete req.auth.password; //gets rid of password
         return user;
-      }) 
+      })
       .then(user => user.generateToken())
       .then(token => res.status(200).json(token))
       .catch(err => errorHandler(err, res));

@@ -21,8 +21,8 @@ module.exports = function(req, res, next) {
   req.auth = {username, password};
 
   //validation of things actually beinged passed and assigned to req.auth object
-  if(!req.auth.username) return errorHandler(new Error('Authorization Failed. Username required.'));
-  if(!req.auth.password) return errorHandler(new Error('Authorization Failed. Password required.'));
+  if(!req.auth.username) return errorHandler(new Error('Authorization Failed. Username required.'), res);
+  if(!req.auth.password) return errorHandler(new Error('Authorization Failed. Password required.'), res);
 
   //assumption here is that EVERYTHING UP TIL NOW HAS WORKED OUT AYY, structure of headers is good, have what we need to say next() which kicks us bak to callback in route-auth.js
   next();

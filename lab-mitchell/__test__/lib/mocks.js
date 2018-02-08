@@ -2,40 +2,32 @@
 
 const faker = require('faker');
 const Auth = require('../../model/auth');
+const debug = require('debug')('http:mock');
 
 const mock = module.exports = {};
 
-// Auth Mocks - One, Many, RemoveAll
+// different mocks
 mock.auth = {};
 
 mock.auth.createOne = () => {
   let result = {};
   result.password = faker.name.lastName();
 
-  let auth = new Auth({
+  debug('about to create a new mock.auth');
+  return new Auth({
     username: faker.name.firstName(),
     email: faker.internet.email(),
-  });
-
-  return auth.generatePasswordHash(result.password)
-    .then(auth => {
-      result.auth = auth;
-      return auth.save();
-    })
+  })
+    .generatePasswordHash(result.password)
+    .then(auth => result.auth = auth)
     .then(auth => auth.generateToken())
-    .then(token => {
-      result.token = token;
+    .then(token => result.token = token)
+    .then(() => {
+      debug(`mock createOne result: ${result}`);
+      debug(`mock createOne result.auth: ${result.auth}`);
+      debug(`mock createOne result.token: ${result.token}`);
       return result;
     });
 };
-
-// mock.auth.createOne = () => new Auth({
-//   username: faker.name.firstName(),
-//   password: faker.name.lastName(),
-//   email: faker.internet.email(),
-// }).save();
-
-mock.auth.createMany = n =>
-  Promise.all(new Array(n).fill(0).map(mock.auth.createOne));
 
 mock.auth.removeAll = () => Promise.all([Auth.remove()]);

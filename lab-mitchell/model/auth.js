@@ -14,7 +14,7 @@ const Auth = mongoose.Schema({
   username: {type: String, required: true, unique: true}, //unique here compares all the other ones, why all the good usernames are taken
   password: {type: String, required: true},
   email: {type: String, required: true},
-  compareHash: {type: String, unique: true},
+  compareHash: {type: String, unique: true}, //sign and verify token, when decrypting token we get the compareHash value
 }, {timestamps: true});
 
 Auth.methods.generatePasswordHash = function(password) { //sets up method for each Auth schema so its available as needed
@@ -39,27 +39,33 @@ Auth.methods.comparePasswordHash = function(password) {
       if(err) return reject(err);
       //can also just generalize say 'AUTH FAILED.'
       if(!valid) return reject(new Error('Authorization failed. Password invalid.')); //only response passed to valid is TRUE/FALSE, no password back, no internal data, just T/F yes they good or no they not
+      debug('comparePasswordHash success, can move forward');
       resolve(this); //just means they can move forward in the process
       //also don't have to return resolve
-    }); 
+    });
   });
 };
 
 //use crypto nodeJS module, looking for random 32-byte string/value, then stringifiy into hexidecimal encoding
-Auth.methods.generateCompareHash = function() {
+Auth.methods.generateCompareHash = function() { //VENICIO - TOKEN SEED
   debug('calling generateCompareHash');
   this.compareHash = crypto.randomBytes(32).toString('hex');
   return this.save()
-  //if protecting against brute force, have helper function that would use a counter to stop further attempts
+    //if protecting against brute force, have helper function that would use a counter to stop further attempts
     .then(() => Promise.resolve(this.compareHash)) //explicit Promise resolve, pass back the created compareHash
-    .catch(() => this.generateCompareHash()); //calls until we get a UNIQUE COMPARE HASH, NOT very robust with security, potential loop
+    // .catch(() => this.generateCompareHash()); //calls until we get a UNIQUE COMPARE HASH, NOT very robust with security, potential loop
+    //changed to console.error
+    // .then(() => debug(`generateCompareHash success, ${this.compareHash}`))
+    .catch(console.error);
 };
 
 Auth.methods.generateToken = function() {
   debug('calling generateToken');
   //if not this.generateCompareHash, would scope to MODULE not the SCHEMA
   return this.generateCompareHash() //on success, sends up A PROMISE
-    .then(compareHash => jwt.sign(compareHash, process.env.APP_SECRET))
+    .then(compareHash => jwt.sign({token: compareHash}, process.env.APP_SECRET))
+    // .then(console.log)
+    // .then(() => debug(`generateToken success`))
     .catch(err => err);
 };
 
