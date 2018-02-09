@@ -1,7 +1,7 @@
 {
   "name": "lab-richard",
   "version": "1.0.0",
-  "description": "Base Auth",
+  "description": "16-basic-auth",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -38,21 +38,26 @@
       }
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "montgomeryrd"
+  },
   "author": "Richard Montgomery",
   "license": "ISC",
-  "devDependencies": {
-    "body-parser": "^1.18.2",
-    "dotenv": "^5.0.0",
-    "eslint": "^4.17.0",
-    "eslint-plugin-react": "^7.6.1",
-    "jest": "^22.1.4"
-  },
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "cors": "^2.8.4",
-    "crypto": "^1.0.1",
+    "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.3"
+    "mongoose": "^5.0.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-plugin-react": "^7.6.1",
+    "faker": "^4.1.0",
+    "jest": "^22.2.1",
+    "superagent": "^3.8.2"
   }
 }

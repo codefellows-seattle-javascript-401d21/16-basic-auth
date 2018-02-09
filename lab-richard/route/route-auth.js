@@ -4,6 +4,7 @@ const Auth = require('../model/auth');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
+
 module.exports = function(router) {
     router.post('/signup', bodyParser, (req, res) => {
         let pw = req.body.password;
@@ -26,7 +27,7 @@ module.exports = function(router) {
         Auth.findOne({username: req.auth.username})
             .then(user =>
                 user
-                    ? user.comparePasswordHash(req.auth.password)
+                    ? user.comparePasswordHash(req.auth.password) //pw?
                     : Promise.reject(new Error('Authorization Failed. User Not Found.'))
             )
             .then(user => {

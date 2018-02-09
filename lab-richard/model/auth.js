@@ -17,7 +17,8 @@ Auth.methods.generatePasswordHash = function(password) {
  
     return bcrypt.hash(password, 10)
         .then(hash => this.password = hash)
-        .then(() => this);
+        .then(() => this)
+        .catch(err => err);
 };
 
 Auth.methods.comparePasswordHash = function(password) {
@@ -34,12 +35,15 @@ Auth.methods.generateCompareHash = function() {
     this.compareHash = crypto.randomBytes(32).toString('hex');
     return this.save()
         .then(() => Promise.resolve(this.compareHash))
-        .catch(() => this.generateCompareHash()) //Potential Loop
+        .catch(console.error);
+    // .catch(() => this.generateCompareHash()); //Potential Loop
 };
 
 Auth.methods.generateToken = function () {
     return this.generateCompareHash()
-        .then(compareHash => jwt.sign({token: compareHash}, process.env.APP_SECRET))
+        .then(compareHash => {
+            return jwt.sign({token: compareHash}, process.env.APP_SECRET)
+        })
         .catch(err => err);
 };
 
