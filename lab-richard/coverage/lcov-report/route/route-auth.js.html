@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">30.43% </span>
+        <span class="strong">65.22% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>7/23</span>
+        <span class='fraction'>15/23</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/2</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">8.33% </span>
+        <span class="strong">58.33% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/12</span>
+        <span class='fraction'>7/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">30.43% </span>
+        <span class="strong">65.22% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>7/23</span>
+        <span class='fraction'>15/23</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -110,20 +110,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
 &nbsp;
@@ -150,21 +150,21 @@ module.exports = function(router) {
             .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; <span class="cstat-no" title="statement not covered" >errorHandler(err, res))</span>;
     });
 &nbsp;
-    router.get('/signin', basicAuth, <span class="fstat-no" title="function not covered" >(r</span>eq, res) =&gt; {
-<span class="cstat-no" title="statement not covered" >        Auth.findOne({username: req.auth.username})</span>
-            .then(<span class="fstat-no" title="function not covered" >us</span>er =&gt;
-<span class="cstat-no" title="statement not covered" >                user</span>
+    router.get('/signin', basicAuth, (req, res) =&gt; {
+        Auth.findOne({username: req.auth.username})
+            .then(user =&gt;
+                user
                     ? user.comparePasswordHash(req.auth.password) //pw?
                     : Promise.reject(new Error('Authorization Failed. User Not Found.'))
             )
-            .then(<span class="fstat-no" title="function not covered" >us</span>er =&gt; {
-<span class="cstat-no" title="statement not covered" >                delete req.headers.authorization;</span>
-<span class="cstat-no" title="statement not covered" >                delete req.auth.password;</span>
-<span class="cstat-no" title="statement not covered" >                return user;</span>
+            .then(user =&gt; {
+                delete req.headers.authorization;
+                delete req.auth.password;
+                return user;
             })
-            .then(<span class="fstat-no" title="function not covered" >us</span>er =&gt; <span class="cstat-no" title="statement not covered" >user.generateToken())</span>
-            .then(<span class="fstat-no" title="function not covered" >to</span>ken =&gt; <span class="cstat-no" title="statement not covered" >res.status(200).json(token))</span>
-            .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; <span class="cstat-no" title="statement not covered" >errorHandler(err, res))</span>;
+            .then(user =&gt; user.generateToken())
+            .then(token =&gt; res.status(200).json(token))
+            .catch(err =&gt; errorHandler(err, res));
     });
 };</pre></td></tr>
 </table></pre>
@@ -172,7 +172,7 @@ module.exports = function(router) {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Feb 09 2018 01:07:32 GMT-0800 (PST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Feb 09 2018 01:25:11 GMT-0800 (PST)
 </div>
 </div>
 <script src="../prettify.js"></script>

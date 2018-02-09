@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const crypto = require('mongoose');
+const crypto = require('crypto');
 
 const Auth = mongoose.Schema({
     username: {type: String, required: true, unique: true},
@@ -35,14 +35,13 @@ Auth.methods.generateCompareHash = function() {
     this.compareHash = crypto.randomBytes(32).toString('hex');
     return this.save()
         .then(() => Promise.resolve(this.compareHash))
-        .catch(console.error);
-    // .catch(() => this.generateCompareHash()); //Potential Loop
+        .catch(() => this.generateCompareHash()); //Potential Loop
 };
 
 Auth.methods.generateToken = function () {
     return this.generateCompareHash()
         .then(compareHash => {
-            return jwt.sign({token: compareHash}, process.env.APP_SECRET)
+            return jwt.sign({token: compareHash}, process.env.APP_SECRET);
         })
         .catch(err => err);
 };
