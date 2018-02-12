@@ -1,16 +1,10 @@
-># Lab 11: Express
+># Lab 16: Basic Auth
 
-This is a simple  HTTP server created using express.  There are four basic CRUD methods available for interacting with an object with three properties, subject, comment and id. 
+ A basic express server with basic authorization middleware and get and post routes for basic for signup/signin functionality and a mongodb for persistance.
 
-  - POST - Create an object and have it saved to a file. 
+  - POST - Create a user account and save the username, email and a hashed password for hashed encryption comparison. 
 
-  - PUT - modify the subject and comment properties.
-
-  - GET - Fetch teh data for an object.
-
-  - DELETE - remove an object fro storage. 
-
-  The objects are stored in files on the server as json.
+  - GET - Sign in using a basic authorization header
 
 >## Install
 
@@ -23,19 +17,21 @@ This is a simple  HTTP server created using express.  There are four basic CRUD 
 - This project has the following dependencies:
 
 ```JSON
-    "devDependencies": {
-        "debug": "^3.1.0",
-        "dotenv": "^5.0.0",
-        "eslint": "^4.16.0",
-        "jest": "^22.1.4",
-        "superagent": "^3.8.2"
-      },
-      "dependencies": {
-        "bluebird": "^3.5.1",
-        "body-parser": "^1.18.2",
-        "express": "^4.16.2",
-        "uuid": "^3.2.1"
-      }
+   "devDependencies": {
+    "debug": "^3.1.0",
+    "faker": "^4.1.0",
+    "jest": "^22.1.4",
+    "superagent": "^3.8.2"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.3"
+  }
 ```
 
 ### npm scripts
@@ -44,11 +40,16 @@ This is a simple  HTTP server created using express.  There are four basic CRUD 
 
 ```JSON
     "scripts": {
-      "lint": "eslint .",
-      "test": "jest --verbose -i",
-      "test:debug": "DEBUG=http* jest --verbose -i",
-      "start": "nodemon index.js",
-      "start:debug": "DEBUG=http* nodemon index.js"
+    "start": "node index.js",
+    "start:watch": "nodemon index.js",
+    "start:debug": "DEBUG=http* nodemon index.js",
+    "test": "jest -i",
+    "test:watch": "jest -i --watchAll",
+    "test:debug": "DEBUG=http* jest -i",
+    "lint": "eslint .",
+    "start-db": "mkdir -p ./data/db && mongod --dbpath ./data/db",
+    "stop-db": "killall mongod"
+  }
 ```
 
 #### Run the tests!
@@ -79,152 +80,59 @@ Debug mode
     npm run start:debug
 ```
 
+
+#### Start the database
+
+Start
+
+```BASH
+    npm run start-db
+```
+
+
 >## Usage
 
 ### Post
 
-  - Create a new note by sending a request to /api/v1/note with a body that contains a 'subject' and 'comment'.
+  - Create a new user by sending a POST request to /api/v1/signup 
+  
+  - send a body that contains a 'username', 'email' and 'password'
 
-  - The response will contain a json copy of the object with its unique identifier.
+  - The response will contain a JSON web token..
 
-```JAVASCRIPT
-{subject: 'talking computers', comment: 'I don\'t like them'}
-
-```
 
 ```BASH
- http POST :4000/api/v1/note subject="talking computers" comment="I don't like them"
-
+    http POST :3000/api/v1/signup username='Kevin Miller' email='me@you.com' password='misslabeled'
     HTTP/1.1 201 Created
+    Access-Control-Allow-Origin: *
     Connection: keep-alive
-    Content-Length: 107
+    Content-Length: 205
     Content-Type: application/json; charset=utf-8
-    Date: Tue, 30 Jan 2018 08:09:06 GMT
-    ETag: W/"6b-8CtRPZUH1itf2mPj1CjrgP2Py1Y"
+    Date: Mon, 12 Feb 2018 05:16:33 GMT
+    ETag: W/"cd-GZEW9jHgiFNUv954fKKC2G/qcPU"
     X-Powered-By: Express
 
-    {
-        "comment": "I don't like them",
-        "id": "0171fde2-929b-4c67-a882-35e11fccc4fb",
-        "subject": "talking computers"
-    }
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3QiOiIxOGQ0OTgxNTE4NmFiNDNmYzRmOWY3MDIyMGY0NjAxOTQ4OThjYjdhNjMwMWMxNjE3ZWU0NTgyMGFmYzQ5NjFlIiwiaWF0IjoxNTE4NDEyNTkzfQ._RUwIlfPOjl0XNs-WCW-bt8RN_GyGtfoVFzIFqIWwls"
 ```
 
-### GET - fetch one note
+### GET 
 
-  - Get a json object of a note by sending its unique id as a path to /api/v1/note/&lt;unique_id&gt;
+  - Make a get request with a basic auth header to /api/v1/signin 
+  
+  - The response will contain a JSON web token.
 
 ```BASH
-    http :4000/api/v1/note/0171fde2-929b-4c67-a882-35e11fccc4fb
+    http -a 'Kevin Miller:misslabeled' :3000/api/v1/signin
     HTTP/1.1 200 OK
+    Access-Control-Allow-Origin: *
     Connection: keep-alive
-    Content-Length: 107
+    Content-Length: 205
     Content-Type: application/json; charset=utf-8
-    Date: Tue, 30 Jan 2018 08:14:46 GMT
-    ETag: W/"6b-8CtRPZUH1itf2mPj1CjrgP2Py1Y"
+    Date: Mon, 12 Feb 2018 05:21:50 GMT
+    ETag: W/"cd-dILWxnUJXOWdWR8VY0MV2rZLzwI"
     X-Powered-By: Express
 
-    {
-        "comment": "I don't like them",
-        "id": "0171fde2-929b-4c67-a882-35e11fccc4fb",
-        "subject": "talking computers"
-    }
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3QiOiIyYjdhNDI1OWMzOTU0NmQyOTE3MjBlYzljYzJlZjA4YjBhMTYwOTY0MmY5YzFmMGM5OGViOTI3MWNiOWQzOWMzIiwiaWF0IjoxNTE4NDEyOTEwfQ.m12eAlQwPTYugoq9OkQogvzhujZfg-y4pqgy3R3EmHY"
 
-```
-
-
-### GET - fetch all ids
-
-- Get a json array of all note ids by sending a GET request to /api/v1/note
-
-```BASH
-      http :4000/api/v1/note
-      HTTP/1.1 200 OK
-      Connection: keep-alive
-      Content-Length: 118
-      Content-Type: application/json; charset=utf-8
-      Date: Tue, 30 Jan 2018 08:18:30 GMT
-      ETag: W/"76-RO+qkcrAr3t6PEDzQQXujTYQdGw"
-      X-Powered-By: Express
-
-      [
-          "0171fde2-929b-4c67-a882-35e11fccc4fb",
-          "7370a48e-9546-4f05-92fb-6328fdc27afa",
-          "f2658693-3cbb-4aab-90ca-3ae7de04de02"
-      ]
-
-```
-
-### PUT - update a note
-
-  - Use the unique id to update a note along with a subject and comment in the request body with a PUT request to /api/v1/note
-
-```Bash
-    http POST :4000/api/v1/note subject="Helo" comment="How is you?"
-    HTTP/1.1 201 Created
-    Connection: keep-alive
-    Content-Length: 86
-    Content-Type: application/json; charset=utf-8
-    Date: Tue, 30 Jan 2018 08:23:17 GMT
-    ETag: W/"56-NbKFB0DGFQ4LrE5HRKXuk09Ueu0"
-    X-Powered-By: Express
-
-    {
-        "comment": "How is you?",
-        "id": "201d5149-7736-42e1-a349-b6f3e641e735",
-        "subject": "Helo"
-    }
-
-    --------------------
-
-    http PUT :4000/api/v1/note/201d5149-7736-42e1-a349-b6f3e641e735 subject="Hello" comment="How are you?"
-    HTTP/1.1 204 No Content
-    Connection: keep-alive
-    Date: Tue, 30 Jan 2018 08:24:40 GMT
-    X-Powered-By: Express
-
-    ---------------------
-
-    http :4000/api/v1/note/201d5149-7736-42e1-a349-b6f3e641e735
-    HTTP/1.1 200 OK
-    Connection: keep-alive
-    Content-Length: 88
-    Content-Type: application/json; charset=utf-8
-    Date: Tue, 30 Jan 2018 08:25:27 GMT
-    ETag: W/"58-bETguzT0FCDFcQ95/XZ/XsWno3Y"
-    X-Powered-By: Express
-
-    {
-        "comment": "How are you?",
-        "id": "201d5149-7736-42e1-a349-b6f3e641e735",
-        "subject": "Hello"
-    }
-```
-
-### Delete
-
-- Delete a note from storage by making a DELETE request with a unique id of a note to /api/v1/note
-
-```BASH
-    http DELETE :4000/api/v1/note/201d5149-7736-42e1-a349-b6f3e641e735
-    HTTP/1.1 204 No Content
-    Connection: keep-alive
-    Date: Tue, 30 Jan 2018 08:28:47 GMT
-    X-Powered-By: Express
-```
-
-- A Get request with this id will now return an error 404.
-
-```BASH
-     http :4000/api/v1/note/201d5149-7736-42e1-a349-b6f3e641e735
-    HTTP/1.1 404 Not Found
-    Connection: keep-alive
-    Content-Length: 167
-    Content-Type: text/html; charset=utf-8
-    Date: Tue, 30 Jan 2018 08:30:12 GMT
-    ETag: W/"a7-vi2fSZmlczG1C4XL6S5hY+V1M+k"
-    X-Powered-By: Express
-
-    Error: ENOENT: no such file or directory, open '../data/note/201d5149-7736-42e1-a349-b6f3e641e735.json'
 ```
 
