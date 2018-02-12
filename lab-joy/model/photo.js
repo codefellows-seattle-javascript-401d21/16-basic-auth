@@ -31,7 +31,7 @@ const Photo = mongoose.Schema({
         required: true,
         unique: true,
     },
-    ImageURI: {
+    imageURI: {
         type: String,
         required: true,
         unique: true,
@@ -40,7 +40,8 @@ const Photo = mongoose.Schema({
 
 Photo.statics.upload = function(req) {
     return new Promise((resolve, reject) => {
-        if (!req.file || !req.file.path) return reject(new Error('Multi-part form data error. File and file path required.'));
+        // console.log(req.file.path);
+        // if (!req.file || !req.file.path) return reject(new Error('Multi-part form data error. File and file path required.'));
         let params = {
             ACL: 'public-read',
             Bucket: process.env.AWS_BUCKET,
@@ -58,7 +59,7 @@ Photo.statics.upload = function(req) {
                     userId: req.user._id,
                     noteId: req.body.noteId,
                     imageURI: data.Location,
-                    objectKey: data.key,
+                    objectKey: data.Key,
                 };
                 resolve(photoData);
             })

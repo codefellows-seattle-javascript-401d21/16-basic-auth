@@ -12,7 +12,6 @@ const tempDir = `${__dirname}/../temp`;
 const upload = multer({ dest: tempDir });
 
 module.exports = function (router) {
-
     router.get('/photos/me', bearerAuth, (req, res) => {
         Photo.find({ userId: req.user._id })
             .then(photos => photos.map(photo => photo._id))
@@ -20,23 +19,31 @@ module.exports = function (router) {
             .catch(err => errorHandler(err, res));
     });
 
-    router.post('/photo/:_id?', bearerAuth, bodyParser, upload.single('image'), (req, res) => {
+    router.post('/photo', bearerAuth, bodyParser, upload.single('image'), (req, res) => {
+        if (!req.body.name || !req.body.desc || !req.body.noteId) return errorHandler(new Error('Validation error. Request must include name, description, and note ID.'), res);
+
         Photo.upload(req)
-            .then(photoData => new Photo(photoData).save())
-            .then(pic => res.status(201).json(pic))
+            .then(photoData => {
+                // console.log(photoData);
+                return new Photo(photoData).save();
+            })
+            .then(pic => {
+                // console.log(pic);
+                return res.status(201).json(pic);
+            })
             .catch(err => errorHandler(err, res));
     });
 
     router.get('/photo/:_id?', bearerAuth, (req, res) => {
         if (req.params._id) {
             return Photo.findById(req.params._id)
-                .then(pic = res.status(200).json(pic))
+                .then(pic => res.status(200).json(pic))
                 .catch(err => errorHandler(err, res));
         }
 
         Photo.find({ userID: req.query.userId })
             .then(photos => photos.map(photo => photo._id))
-            .then(ids = res.status(200).json(ids))
+            .then(ids => res.status(200).json(ids))
             .catch(err => errorHandler(err, res));
     });
 };

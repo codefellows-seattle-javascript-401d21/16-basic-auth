@@ -1,7 +1,7 @@
 'use strict';
 
 require('jest');
-const faker = require('faker');
+// const faker = require('faker');
 const superagent = require('superagent');
 const server = require('../../lib/server');
 const mocks = require('../lib/mocks');
@@ -21,6 +21,7 @@ describe('PUT /api/v1/note', () => {
             .set('Authorization', `Bearer ${this.mockUser.token}`)
             .send({
                 name: 'cats',
+                content: 'stuff',
             })
             .then(res => {
                 expect(res.status).toBe(204);
@@ -54,38 +55,3 @@ describe('PUT /api/v1/note', () => {
             .catch(err => expect(err.status).toBe(404));
     });
 });
-
-
-// 'use strict';
-
-// const faker = require('faker');
-// const mocks = require('../lib/mocks');
-// const superagent = require('superagent');
-// const server = require('../../lib/server');
-// require('jest');
-
-// // describe('PUT /api/v1/note', function () {
-//     beforeAll(server.start);
-//     // beforeAll(() => mocks.auth.createOne().then(data => this.mockUser = data))
-//     beforeAll(() => mocks.note.createOne().then(data => this.mockData = data));
-//     afterAll(server.stop);
-//     afterAll(mocks.auth.removeAll);
-//     afterAll(mocks.note.removeAll);
-
-//     describe('Valid request', () => {
-
-//         it('should update an existing record', () => {
-//             // console.log(this.mockData)
-//             let updated = {
-//                 name: 'pajamas',
-//                 content: 'fire trucks',
-//             };
-
-//             return superagent.put(`:${process.env.PORT}/api/v1/note/${this.mockData.note._id}`)
-//                 .set('Authorization', `Bearer ${this.mockData.token}`)
-//                 .send(updated)
-//                 .then(res => expect(res.status).toEqual(204))
-//                 .catch(err => new Error(err));
-//         });
-//     });
-// });
