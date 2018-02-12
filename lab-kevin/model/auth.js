@@ -26,15 +26,15 @@ Auth.methods.createHashedpassword = function(password){
 };
 
 Auth.methods.comparePasswords = function(password) {
-  debug('password', password);
-  return bcrypt.compare(password, this.password)
-    .then(valid => {
+  return new Promise((resolve, reject) => { 
+    bcrypt.compare(password, this.password, (err, valid) => {
       debug('valid before:', valid);
-      if(!valid) return new Error('Authorization Error: invalid password');
+      if(err) return reject(err);
+      if(!valid) return reject(new Error('Authorization Error: invalid password'));
       debug('valid after:', valid);
-      return this;
-    })
-    .catch(err => err);
+      return resolve(this);
+    });
+  });
 };
 
 Auth.methods.createCompHash = function() {
@@ -43,7 +43,7 @@ Auth.methods.createCompHash = function() {
   debug('this.compHash', this.compHash);
   return this.save()
     .then(() => this.compHash)
-    .catch(() => this.createCompHash());
+    .catch(err => err);
 };
 
 Auth.methods.createToken = function() {
