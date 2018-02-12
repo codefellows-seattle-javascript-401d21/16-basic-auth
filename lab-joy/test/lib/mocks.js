@@ -1,8 +1,12 @@
 'use strict';
 
 const faker = require('faker');
+const superagent = require('superagent');
 const Auth = require('../../model/auth');
 const Note = require('../../model/note');
+const Photo = require('../../model/photo');
+const path = `:${process.env.PORT}/api/v1/photo`;
+const image = `${__dirname}/../snowdrop.jpg`;
 const mocks = module.exports = {};
 
 // Auth Mocks
@@ -32,7 +36,7 @@ mocks.auth.createOne = () => {
 mocks.note = {};
 
 mocks.note.createOne = () => {
-    let result = null;
+    let result = {};
     
     return mocks.auth.createOne()
         .then(user => result = user)
@@ -49,6 +53,39 @@ mocks.note.createOne = () => {
         });
 };
 
+// Photo Mocks
+mocks.photo = {};
+
+mocks.photo.createOne = () => {
+    let result = {}; 
+
+    return mocks.note.createOne()
+        .then(res => result = res)
+        .then(res => {
+            return superagent.post(path)
+                .set('Authorization', `Bearer ${res.token}`)
+                .field('name', faker.internet.domainWord())
+                .field('desc', faker.random.words(15))
+                .field('noteId', res.note._id.toString())
+                .attach('image', image)
+                .then(photo => {
+                    result.photo = photo;
+                    // console.log(result);
+                    return result;
+                })
+                .catch(err => console.log(err));
+            // new Photo({
+            //     name: faker.internet.domainWord(),
+            //     desc: faker.random.words(15),
+            //     userId: res.user._id,
+            //     noteId: res.note._id,
+            //     objectKey: faker.internet.domainWord(),
+            //     imageURI: faker.random.image(),
+            // }).save();
+        });
+};
+
 // Remove
 mocks.auth.removeAll = () => Promise.all([Auth.remove()]);
 mocks.note.removeAll = () => Promise.all([Note.remove()]);
+mocks.photo.removeAll = () => Promise.all([Photo.remove()]);
